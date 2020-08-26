@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, Image, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  Alert,
+  Text,
+  Button,
+  Settings,
+} from "react-native";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import Collapsible from "react-native-collapsible";
 import colors from "../config/colors";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
+import ActivityIndicator from "../components/ActivityIndicator";
 import {
   Menu,
   MenuProvider,
@@ -44,7 +54,7 @@ function AdminEdit({ navigation }) {
               alert("Unable to delete." + "\n" + response.data);
             } else {
               alert("Deleted Successfully");
-              setFoodItems(foodItems.filter((food) => food._id !== item._id));
+              foods2 = food2.filter((food) => food._id !== item._id);
             }
           },
         },
@@ -55,25 +65,29 @@ function AdminEdit({ navigation }) {
 
   const [foodItems, setFoodItems] = useState([]);
   const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    loadFood();
-  }, []);
-
+  const [loading, setLoading] = useState(false);
   const loadFood = async () => {
     try {
-      const response = await listingApi.getFoodItems();
-      const food = response.data;
+      setLoading(true);
+      const response = await listingApi.getFoodItems("2");
+      const food = await response.data;
+      setLoading(false);
       setFoodItems(food);
-      let temp = [];
+      let set = new Set();
+      // console.log(food);
+      // console.log(food2);
+      let temp = new Array();
       for (let i = 0; i < food.length; i++) {
-        temp.push(food[i].category);
+        set.add(food[i].category);
       }
-      setCategories([...new Set(temp)]);
+      setCategories(Array.from(set));
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    loadFood();
+  }, []);
 
   const ItemList = (category) => (
     <View style={styles.container}>
@@ -84,7 +98,7 @@ function AdminEdit({ navigation }) {
       <Collapsible collapsed={false}>
         <FlatList
           data={search(category, foodItems)}
-          keyExtractor={(item) => item._id.toString()}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <View style={styles.detailsContainer}>
               {(item.image && (
@@ -138,17 +152,22 @@ function AdminEdit({ navigation }) {
       </Collapsible>
     </View>
   );
+
   return (
-    <Screen>
-      <MenuProvider>
-        <FlatList
-          // data={["Snacks", "Veg", "NonVeg"]}
-          data={categories}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => ItemList(item)}
-        />
-      </MenuProvider>
-    </Screen>
+    <>
+      {loading && <ActivityIndicator visible={loading} />}
+      {!loading && (
+        <Screen>
+          <MenuProvider>
+            <FlatList
+              data={categories}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => ItemList(item)}
+            />
+          </MenuProvider>
+        </Screen>
+      )}
+    </>
   );
 }
 
