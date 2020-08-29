@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, View, Button, FlatList, Image } from "react-native";
 import colors from "../config/colors";
 import AppText from "../components/AppText";
 import RadioForm from "react-native-simple-radio-button";
+import AppButton from "../components/AppButton";
+import routes from "../navigation/routes";
+import url from "../keys/url";
+import AuthContext from "../auth/context";
 
-export default function OrderSummaryScreen({ route }) {
-  const listing = route.params;
-  console.log(listing);
+export default function OrderSummaryScreen({ navigation, route }) {
+  const { user, setUser } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const k = route.params;
+  const listing = k.data;
+  const orderId = k.ID;
   const renderItem = (item) => (
     <View style={styles.detailsContainer}>
       {(item.image && (
@@ -27,11 +34,35 @@ export default function OrderSummaryScreen({ route }) {
       </View>
     </View>
   );
+  //http://localhost:3000/admin/pending/5f48f07e841ec55830e4730e?orderId=5f4ab5b52315dcc234bb53af&orderStatus=1;
+
+  const placeOrder = async () => {
+    const url2 =
+      url.ngrokUrl +
+      "/admin/pending/" +
+      user._id +
+      "?orderId=" +
+      orderId +
+      "&orderStatus=" +
+      confirmStatus;
+    try {
+      setLoading(true);
+      let result = await fetch(url2, {
+        method: "GET", // Method itself
+      });
+      const data2 = await result.text();
+      console.log(data2);
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   var radio_props = [
-    { label: "Not Availible", value: 0 },
-    { label: "Ready", value: 2 },
-    { label: "Preparing", value: 1 },
+    { label: "Pending", value: 0 },
+    { label: "Reject", value: 1 },
+    { label: "Accept", value: 2 },
   ];
+  const [confirmStatus, SetconfirmStatus] = useState(0);
   return (
     <View style={{ paddingLeft: 15 }}>
       <Text
@@ -45,24 +76,32 @@ export default function OrderSummaryScreen({ route }) {
       >
         History
       </Text>
-      <RadioForm
-            radio_props={radio_props}
-            formHorizontal={false}
-            labelHorizontal={true}
-            initial={1}
-            
-            animation={false}
-            onPress={(value) => {
-              console.log(value)
-            }}
-            labelStyle={{
-              marginRight: 30,
-            }}
-          />
       <FlatList
         data={listing}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => renderItem(item)}
+      />
+      <RadioForm
+        radio_props={radio_props}
+        formHorizontal={false}
+        labelHorizontal={true}
+        initial={0}
+        animation={false}
+        onPress={(value) => {
+          SetconfirmStatus(value);
+          // post req
+        }}
+        labelStyle={{
+          marginRight: 30,
+        }}
+      />
+      <AppButton
+        title="confirm"
+        onPress={() => (
+          console.log(confirmStatus),
+          placeOrder(),
+          navigation.navigate(routes.ORDERS)
+        )}
       />
     </View>
   );

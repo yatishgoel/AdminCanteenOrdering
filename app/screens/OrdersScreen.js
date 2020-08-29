@@ -14,82 +14,60 @@ import ListItemSeparator from "../components/lists/ListItemSeparator";
 import AuthContext from "../auth/context";
 import orderApi from "../api/orders";
 import routes from "../navigation/routes";
-import { MaterialCommunityIcons } from "@expo/vector-icons"
-import Entypo from 'react-native-vector-icons/Entypo';
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Entypo from "react-native-vector-icons/Entypo";
+import url from "../keys/url";
+import ActivityIndicator from "../components/ActivityIndicator";
 import listings from "../Data/halls";
+import { isDuration } from "moment";
 
 function OrderScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
+  const [history, SetHistory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    var interval;
+    interval = setInterval(() => {
+      getData();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [history]);
+  const getData = async () => {
+    const url2 = url.ngrokUrl + "/admin/pendingOrders/" + user._id;
+      console.log("hbvbdgvbsd")
+    try {
+      let result = await fetch(url2, {
+        method: "GET", // Method itself
+      });
+      const data2 = await result.json();
 
-  const history = [
-    {
-      items: [
-        { id: "5f36ac1d11aadbd1d82da6e1", quantity: 1 },
-        { id: "5f36ac2211aadbd1d82da6e2", quantity: 1 },
-      ],
-      // time: { $date: { $numberLong: "1598703953984" } },
-      orderStatus: 0,
-      _id:  "5f4a495b6a476ea06d3c4b66" ,
-      isDelivery: false,
-      payment_method: "account",
-      room: "",
-      totalPrice: 100,
-      hall:2
-    },
-    {
-      items: [
-        { id: "5f36ac2211aadbd1d82da6e2", quantity: 1 },
-        { id: "5f36ac1d11aadbd1d82da6e1", quantity: 1 },
-      ],
-      // time: { $date: { $numberLong: "1598700003950" } },
-      orderStatus: 1,
-      _id: "5f4a3dfec2d48495ff2a0345" ,
-      isDelivery: false,
-      payment_method: "account",
-      room: "",
-      totalPrice: 100,
-      hall:1
-    },
-    {
-      items: [
-        { id: "5f36ac1d11aadbd1d82da6e1", quantity: 1 },
-      ],
-      // time: { $date: { $numberLong: "1598700003950" } },
-      orderStatus: 2,
-      _id: "5f4a3df1c2d48495ff2a0343" ,
-      isDelivery: false,
-      payment_method: "account",
-      room: "",
-      totalPrice: 50,
-      hall:1
+      SetHistory(data2);
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
     }
-  ]
+  };
+
   const renderItem = (item) => (
     <TouchableWithoutFeedback
-      onPress={() => navigation.navigate(routes.ORDERS_SUMMARY,item.items)}
+      onPress={() =>
+        navigation.navigate(routes.ORDERS_SUMMARY, {
+          data: item.items,
+          ID: item._id,
+        })
+      }
     >
       <View style={styles.Maincontainer}>
-        <View style={styles.detailsContainer}>
-          <Image
-            source={listings.find((element) => element.id === item.hall).image}
-            style={styles.image}
-          />
-
-          <View style={styles.card}>
-            <AppText style={styles.title}>Hall {item.hall}</AppText>
-          </View>
-        </View>
-        <ListItemSeparator style={{ backgroundColor: colors.dark }} />
         <Text style={{ color: "#aaa" }}>Items</Text>
+
         <AppText style={{ fontSize: 15, fontWeight: "800" }}>
-          Click to view more items...
+          {item.items[0].title}.... Click to view more items...
         </AppText>
-        {/* <Text style={{ color: "#aaa" }}>ORDERED ON</Text>
+        <Text style={{ color: "#aaa" }}>ORDERED ON</Text>
         <AppText style={{ fontSize: 15, fontWeight: "800" }}>
-          {item.time.split("T")[0]},{item.time.split("T")[1]}
-        </AppText> */}
+          {item.time.split("T")[0]} {item.time.split("T")[1]}
+        </AppText>
         <Text style={{ color: "#aaa" }}>Total Amount</Text>
         <AppText style={{ fontSize: 15, fontWeight: "bold", color: "green" }}>
           ₹{item.totalPrice}
@@ -109,40 +87,52 @@ function OrderScreen({ navigation }) {
           <Text> dine in</Text>
         )}
         {(() => {
-        switch (item.orderStatus) {
-          case 0:
-            return <Entypo name='circle-with-cross' size={30} color={colors.danger}/>;
-          case 1:
-            return  <MaterialCommunityIcons
-            name="progress-clock"
-            size={30}
-            color={colors.medium}
-          />;
-          case 2:
-            
-            return <MaterialCommunityIcons
-            name="check-decagram"
-            size={30}
-            color={colors.cashGreen}
-          />;
-          default:
-            return null;
-        }
-      })()}
+          switch (item.orderStatus) {
+            case 0:
+              return (
+                <MaterialCommunityIcons
+                  name="progress-clock"
+                  size={30}
+                  color={colors.medium}
+                />
+              );
+            case 1:
+              return (
+                <Entypo
+                  name="circle-with-cross"
+                  size={30}
+                  color={colors.danger}
+                />
+              );
+            case 2:
+              return (
+                <MaterialCommunityIcons
+                  name="check-decagram"
+                  size={30}
+                  color={colors.cashGreen}
+                />
+              );
+            default:
+              return null;
+          }
+        })()}
       </View>
     </TouchableWithoutFeedback>
   );
   return (
-    <SafeAreaView>
-      
-      <FlatList
-        data={history}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => renderItem(item)}
-        // refreshing={refreshing}
-        // onRefresh={() => <Text>aba</Text>}
-      />
-    </SafeAreaView>
+    <>
+      <Text style={styles.title}>Hall {user.hall}</Text>
+      {loading && <ActivityIndicator visible={loading} />}
+      {!loading && (
+        <FlatList
+          data={history}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => renderItem(item)}
+          refreshing={refreshing}
+          onRefresh={() => getData()}
+        />
+      )}
+    </>
   );
 }
 

@@ -71,6 +71,7 @@ function AdminEdit({ navigation }) {
       setLoading(true);
       const response = await listingApi.getFoodItems("2");
       const food = await response.data;
+      console.log(food);
       setLoading(false);
       setFoodItems(food);
       let set = new Set();
@@ -87,6 +88,7 @@ function AdminEdit({ navigation }) {
   };
   useEffect(() => {
     loadFood();
+    console.log("chl rha h");
   }, []);
 
   const ItemList = (category) => (
