@@ -13,6 +13,7 @@ import AdminAdder from "../screens/AdminAdderScreen";
 
 import AdminEditNavigator from "./AdminEditNavigtor";
 import OrdersScreen from "../screens/OrdersScreen";
+import OrderNavigator from "./OrdersNavigator";
 const Tab = createBottomTabNavigator();
 
 const AdminMasterNavigator = () => (
@@ -25,7 +26,7 @@ const AdminMasterNavigator = () => (
   >
     <Tab.Screen
       name={routes.ORDERS}
-      component={OrdersScreen}
+      component={OrderNavigator}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
