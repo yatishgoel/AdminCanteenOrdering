@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "393059815569",
+    "firebase_url": "https://canteenorderingadmin.firebaseio.com",
+    "project_id": "canteenorderingadmin",
+    "storage_bucket": "canteenorderingadmin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393059815569:android:ee6373694c29c4b9f3ef30",
+        "android_client_info": {
+          "package_name": "com.tushar.AdminCOA"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393059815569-vb0q94phlibrscvpf5jj2k5r9fapvp01.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3fOtcRhqEgq3f3xMtMla_Zk9dvE71kgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393059815569-vb0q94phlibrscvpf5jj2k5r9fapvp01.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

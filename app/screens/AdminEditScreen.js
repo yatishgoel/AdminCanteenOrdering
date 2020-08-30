@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -24,6 +24,7 @@ import {
 } from "react-native-popup-menu";
 import routes from "../navigation/routes";
 import listingApi from "../api/foodListings";
+import AuthContext from "../auth/context";
 
 function search(nameKey, myArray) {
   var a = new Array();
@@ -36,6 +37,7 @@ function search(nameKey, myArray) {
 }
 
 function AdminEdit({ navigation }) {
+  const { user } = useContext(AuthContext);
   const [foodItems, setFoodItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -71,7 +73,7 @@ function AdminEdit({ navigation }) {
   const loadFood = async () => {
     try {
       setLoading(true);
-      const response = await listingApi.getFoodItems("2");
+      const response = await listingApi.getFoodItems(user.hall);
       const food = await response.data;
       console.log(food);
       setLoading(false);
