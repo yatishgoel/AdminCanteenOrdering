@@ -3,29 +3,24 @@ import {
   View,
   StyleSheet,
   Text,
-  Image,
   FlatList,
   TouchableWithoutFeedback,
-  SafeAreaView,
 } from "react-native";
 import colors from "../config/colors";
 import AppText from "../components/AppText";
-import ListItemSeparator from "../components/lists/ListItemSeparator";
 import AuthContext from "../auth/context";
-import orderApi from "../api/orders";
 import routes from "../navigation/routes";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Entypo from "react-native-vector-icons/Entypo";
 import url from "../keys/url";
 import ActivityIndicator from "../components/ActivityIndicator";
-import listings from "../Data/halls";
-import { isDuration } from "moment";
+import Screen from "../components/Screen";
 
 function OrderScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
   const [history, SetHistory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     var interval;
     interval = setInterval(() => {
@@ -35,8 +30,9 @@ function OrderScreen({ navigation }) {
   }, [history]);
   const getData = async () => {
     const url2 = url.ngrokUrl + "/admin/pendingOrders/" + user._id;
-      console.log("hbvbdgvbsd")
+    console.log("hbvbdgvbsd");
     try {
+      setLoading(true);
       let result = await fetch(url2, {
         method: "GET", // Method itself
       });
@@ -66,7 +62,8 @@ function OrderScreen({ navigation }) {
         </AppText>
         <Text style={{ color: "#aaa" }}>ORDERED ON</Text>
         <AppText style={{ fontSize: 15, fontWeight: "800" }}>
-          {item.time.split("T")[0]} {item.time.split("T")[1]}
+          {/* {item.time.split("T")[0]} {item.time.split("T")[1]} */}
+          {new Date(item.time).toLocaleString()}
         </AppText>
         <Text style={{ color: "#aaa" }}>Total Amount</Text>
         <AppText style={{ fontSize: 15, fontWeight: "bold", color: "green" }}>
@@ -76,7 +73,7 @@ function OrderScreen({ navigation }) {
         <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
           {item.payment_method}
         </AppText>
-        {!item.isDineIn ? (
+        {item.isDelivery ? (
           <>
             <Text style={{ color: "#aaa" }}>Room</Text>
             <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
@@ -84,7 +81,7 @@ function OrderScreen({ navigation }) {
             </AppText>
           </>
         ) : (
-          <Text> dine in</Text>
+          <Text> Dine in</Text>
         )}
         {(() => {
           switch (item.orderStatus) {
@@ -120,7 +117,7 @@ function OrderScreen({ navigation }) {
     </TouchableWithoutFeedback>
   );
   return (
-    <>
+    <Screen>
       <Text style={styles.title}>Hall {user.hall}</Text>
       {loading && <ActivityIndicator visible={loading} />}
       {!loading && (
@@ -132,7 +129,7 @@ function OrderScreen({ navigation }) {
           onRefresh={() => getData()}
         />
       )}
-    </>
+    </Screen>
   );
 }
 

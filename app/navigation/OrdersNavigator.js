@@ -8,7 +8,6 @@ import routes from "./routes";
 
 import OrderSummaryScreen from "../screens/OrderSummaryScreen";
 import OrderScreen from "../screens/OrdersScreen";
-import RegisterScreen from "../screens/RegisterScreen";
 
 const Stack = createStackNavigator();
 
@@ -19,15 +18,14 @@ const OrderNavigator = () => (
       cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
     }}
   >
-   
     <Stack.Screen
       name={routes.ORDERS}
       component={OrderScreen}
       options={{
-        title: "Order History",
+        headerShown: false,
       }}
     />
-    
+
     <Stack.Screen
       name={routes.ORDERS_SUMMARY}
       component={OrderSummaryScreen}

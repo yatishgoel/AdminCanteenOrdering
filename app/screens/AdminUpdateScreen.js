@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Button, Image } from "react-native";
 import * as Yup from "yup";
 
@@ -11,6 +11,7 @@ import {
 import Screen from "../components/Screen";
 import AppFormImagePicker from "../components/forms/AppFormImagePicker";
 import listingApi from "../api/foodListings";
+import ActivityIndicator from "../components/ActivityIndicator";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
@@ -39,10 +40,12 @@ const validationSchema = Yup.object().shape({
 
 function AdminUpdate({ navigation, route }) {
   const item = route.params;
+  const [loading, setLoading] = useState(false);
 
   const handleUpdate = async (value) => {
     value.hall = item.hall;
     try {
+      setLoading(false);
       const response = await listingApi.updateListing(item._id, value);
       if (!response.ok) {
         alert("Unable to update." + "\n" + response.data);
@@ -50,62 +53,69 @@ function AdminUpdate({ navigation, route }) {
         alert("Updated Successfully");
         navigation.reset({
           index: 0,
-          routes: [{ name: "AdminAdder" }],
+          routes: [{ name: "AdminEdit" }],
         });
         navigation.navigate("AdminEdit");
       }
+      setLoading(true);
     } catch (error) {
       console.log(error);
     }
   };
   return (
-    <Screen style={styles.container}>
-      <Form
-        initialValues={{
-          title: item.title,
-          category: item.category,
-          price: item.price,
-          description: item.description,
-          // hall: item.hall,
-          // image: [Image.resolveAssetSource(item.image).uri],
-        }}
-        onSubmit={(values) => {
-          handleUpdate(values);
-        }}
-        validationSchema={validationSchema}
-      >
-        {/* <AppFormImagePicker name="image" /> */}
-        {/* <Picker items={Halls} name="hall" placeholder="Hall" /> */}
-        <FormField
-          defaultValue={item.title}
-          maxLength={255}
-          name="title"
-          placeholder="Title"
-        />
-        <FormField
-          defaultValue={item.category}
-          maxLength={255}
-          name="category"
-          placeholder="Category"
-        />
-        <FormField
-          defaultValue={item.price.toString()}
-          keyboardType="numeric"
-          maxLength={8}
-          name="price"
-          placeholder="Price"
-        />
+    <>
+      {loading && <ActivityIndicator visible={loading} />}
 
-        <FormField
-          defaultValue={item.description}
-          maxLength={255}
-          name="description"
-          placeholder="Description"
-        />
-        <SubmitButton title="update" />
-      </Form>
-      <Button title="log" onPress={() => console.log("Debug12", item)} />
-    </Screen>
+      {!loading && (
+        <Screen style={styles.container}>
+          <Form
+            initialValues={{
+              title: item.title,
+              category: item.category,
+              price: item.price,
+              description: item.description,
+              // hall: item.hall,
+              // image: [Image.resolveAssetSource(item.image).uri],
+            }}
+            onSubmit={(values) => {
+              handleUpdate(values);
+            }}
+            validationSchema={validationSchema}
+          >
+            {/* <AppFormImagePicker name="image" /> */}
+            {/* <Picker items={Halls} name="hall" placeholder="Hall" /> */}
+            <FormField
+              defaultValue={item.title}
+              maxLength={255}
+              name="title"
+              placeholder="Title"
+            />
+            <FormField
+              defaultValue={item.category}
+              maxLength={255}
+              name="category"
+              placeholder="Category"
+            />
+            <FormField
+              defaultValue={item.price.toString()}
+              keyboardType="numeric"
+              maxLength={8}
+              name="price"
+              placeholder="Price"
+            />
+
+            <FormField
+              defaultValue={item.description}
+              maxLength={255}
+              name="description"
+              placeholder="Description"
+            />
+            <SubmitButton title="update" />
+          </Form>
+          <Button title="log" onPress={() => console.log("Debug12", item)} />
+        </Screen>
+      )}
+    </>
   );
 }
 

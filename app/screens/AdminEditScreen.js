@@ -36,6 +36,10 @@ function search(nameKey, myArray) {
 }
 
 function AdminEdit({ navigation }) {
+  const [foodItems, setFoodItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleDelete = (item) => {
     Alert.alert(
       "Confirm Delete",
@@ -49,12 +53,14 @@ function AdminEdit({ navigation }) {
         {
           text: "Yes",
           onPress: async () => {
+            setLoading(true);
             const response = await listingApi.deleteListing(item._id);
+            setLoading(false);
             if (!response.ok) {
               alert("Unable to delete." + "\n" + response.data);
             } else {
               alert("Deleted Successfully");
-              foods2 = food2.filter((food) => food._id !== item._id);
+              setFoodItems(foodItems.filter((food) => food._id !== item._id));
             }
           },
         },
@@ -62,10 +68,6 @@ function AdminEdit({ navigation }) {
       { cancelable: true }
     );
   };
-
-  const [foodItems, setFoodItems] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
   const loadFood = async () => {
     try {
       setLoading(true);
@@ -77,7 +79,6 @@ function AdminEdit({ navigation }) {
       let set = new Set();
       // console.log(food);
       // console.log(food2);
-      let temp = new Array();
       for (let i = 0; i < food.length; i++) {
         set.add(food[i].category);
       }
@@ -165,6 +166,10 @@ function AdminEdit({ navigation }) {
               data={categories}
               keyExtractor={(item) => item}
               renderItem={({ item }) => ItemList(item)}
+              refreshing={refreshing}
+              onRefresh={() => {
+                loadFood();
+              }}
             />
           </MenuProvider>
         </Screen>

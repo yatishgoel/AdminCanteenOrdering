@@ -6,6 +6,7 @@ import RadioForm from "react-native-simple-radio-button";
 import AppButton from "../components/AppButton";
 import routes from "../navigation/routes";
 import url from "../keys/url";
+import Spinner from "react-native-loading-spinner-overlay";
 import AuthContext from "../auth/context";
 
 export default function OrderSummaryScreen({ navigation, route }) {
@@ -58,13 +59,19 @@ export default function OrderSummaryScreen({ navigation, route }) {
     }
   };
   var radio_props = [
-    { label: "Pending", value: 0 },
+    // { label: "Pending", value: 0 },
     { label: "Reject", value: 1 },
     { label: "Accept", value: 2 },
   ];
   const [confirmStatus, SetconfirmStatus] = useState(0);
   return (
     <View style={{ paddingLeft: 15 }}>
+      <Spinner
+        visible={loading}
+        size="large"
+        animation="fade"
+        cancelable={true}
+      />
       <Text
         style={{
           marginTop: 5,
@@ -97,11 +104,11 @@ export default function OrderSummaryScreen({ navigation, route }) {
       />
       <AppButton
         title="confirm"
-        onPress={() => (
-          console.log(confirmStatus),
-          placeOrder(),
-          navigation.navigate(routes.ORDERS)
-        )}
+        onPress={async () => {
+          console.log(confirmStatus);
+          await placeOrder();
+          navigation.navigate(routes.ORDERS);
+        }}
       />
     </View>
   );
