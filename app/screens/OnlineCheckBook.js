@@ -58,7 +58,7 @@ function OnlineCheckBook({ route, navigation }) {
               categories={Id}
               // ListHeaderComponent={headerContent}
               refreshing={refreshing}
-              onRefresh={() => ha()}
+              onRefresh={() => loadHistory()}
             />
           )}
         </>

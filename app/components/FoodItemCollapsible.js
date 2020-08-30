@@ -25,7 +25,7 @@ function search(nameKey, myArray) {
       a.push(myArray[i]);
     }
   }
-  console.log(a)
+  console.log("hjtfjjtdftfg6ooffgo68",a)
   return a;
 }
 
@@ -67,36 +67,40 @@ function FoodItemCollapsible({ foods, category }) {
   const renderItem = (item) => (
     <TouchableWithoutFeedback
       onPress={() =>
-        console.log("aa")
+        console.log(item.items)
       }
     >
       <View style={styles.Maincontainer}>
         <Text style={{ color: "#aaa" }}>Items</Text>
 
         <AppText style={{ fontSize: 15, fontWeight: "800" }}>
-          {item.items[0].id}.... Click to view more items...
+          {item.items[0].title}   .... Click to view more items...
         </AppText>
         <Text style={{ color: "#aaa" }}>ORDERED ON</Text>
-        {/* <AppText style={{ fontSize: 15, fontWeight: "800" }}>
-          {item.time.split("T")[0]} {item.time.split("T")[1]}
-        </AppText> */}
+        <AppText style={{ fontSize: 15, fontWeight: "800" }}>
+        {new Date(item.time).toLocaleString()}
+        </AppText>
         <Text style={{ color: "#aaa" }}>Total Amount</Text>
-        {/* <AppText style={{ fontSize: 15, fontWeight: "bold", color: "green" }}>
+        <AppText style={{ fontSize: 15, fontWeight: "bold", color: "green" }}>
           ₹{item.totalPrice}
-        </AppText> */}
+        </AppText>
         <Text style={{ color: "#aaa" }}>Payment Method</Text>
-        {/* <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
+        <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
           {item.payment_method}
-        </AppText> */}
-        {/* {!item.isDineIn ? (
+        </AppText>
+        {item.isDelivery ? (
           <>
             <Text style={{ color: "#aaa" }}>Room</Text>
             <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
               {item.room}
             </AppText>
           </>
-        ) : (
-          <Text> dine in</Text>
+        ) : (<>
+          
+          <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
+              Dine In
+            </AppText>
+          </>
         )}
         {(() => {
           switch (item.orderStatus) {
@@ -127,7 +131,7 @@ function FoodItemCollapsible({ foods, category }) {
             default:
               return null;
           }
-        })()} */}
+        })()}
       </View>
     </TouchableWithoutFeedback>
   );

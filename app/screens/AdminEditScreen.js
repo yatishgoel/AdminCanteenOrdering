@@ -15,6 +15,7 @@ import colors from "../config/colors";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import ActivityIndicator from "../components/ActivityIndicator";
+import AuthContext from "../auth/context";
 import {
   Menu,
   MenuProvider,
@@ -42,6 +43,7 @@ function AdminEdit({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user, setUser } = useContext(AuthContext);
   const handleDelete = (item) => {
     Alert.alert(
       "Confirm Delete",

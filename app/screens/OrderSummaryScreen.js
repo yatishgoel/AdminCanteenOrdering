@@ -41,7 +41,7 @@ export default function OrderSummaryScreen({ navigation, route }) {
     { label: "Reject", value: 1 },
     { label: "Accept", value: 2 },
   ];
-  const [confirmStatus, SetconfirmStatus] = useState(0);
+  const [confirmStatus, SetconfirmStatus] = useState(2);
   return (
     <View style={{ paddingLeft: 15 }}>
       <Spinner
