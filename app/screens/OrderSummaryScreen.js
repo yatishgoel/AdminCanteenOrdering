@@ -8,9 +8,10 @@ import routes from "../navigation/routes";
 import url from "../keys/url";
 import Spinner from "react-native-loading-spinner-overlay";
 import AuthContext from "../auth/context";
+import historyApi from "../api/history";
 
 export default function OrderSummaryScreen({ navigation, route }) {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const k = route.params;
   const listing = k.data;
@@ -35,29 +36,7 @@ export default function OrderSummaryScreen({ navigation, route }) {
       </View>
     </View>
   );
-  //http://localhost:3000/admin/pending/5f48f07e841ec55830e4730e?orderId=5f4ab5b52315dcc234bb53af&orderStatus=1;
 
-  const placeOrder = async () => {
-    const url2 =
-      url.ngrokUrl +
-      "/admin/pending/" +
-      user._id +
-      "?orderId=" +
-      orderId +
-      "&orderStatus=" +
-      confirmStatus;
-    try {
-      setLoading(true);
-      let result = await fetch(url2, {
-        method: "GET", // Method itself
-      });
-      const data2 = await result.text();
-      console.log(data2);
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
   var radio_props = [
     { label: "Reject", value: 1 },
     { label: "Accept", value: 2 },
@@ -105,8 +84,18 @@ export default function OrderSummaryScreen({ navigation, route }) {
         title="confirm"
         onPress={async () => {
           console.log(confirmStatus);
-          await placeOrder();
-          navigation.navigate(routes.ORDERS);
+          setLoading(true);
+          const response = await historyApi.updatePendingOrder(
+            user._id,
+            orderId,
+            confirmStatus
+          );
+          setLoading(false);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: routes.ORDERS }],
+          });
+          // navigation.navigate(routes.ORDERS);
         }}
       />
     </View>

@@ -22,29 +22,22 @@ function OnlineCheckBook({ route, navigation }) {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
+
   const loadHistory = async () => {
     setLoading(true);
     const response = await historyApi.getHistory(user._id);
     setLoading(false);
     if (response.ok) {
       setData(response.data);
-      ha();
+      let k = response.data;
+      let temp = [];
+      for (let i = 0; i < k.length; i++) {
+        temp.push(k[i].userEmail);
+      }
+      setID([...new Set(temp)]);
+      console.log(Id);
     }
   };
-
-  // useEffect(() => {
-  //   ha();
-  // }, []);
-
-  const ha = () => {
-    let temp = [];
-    for (let i = 0; i < data.length; i++) {
-      temp.push(data[i].userEmail);
-    }
-    setID([...new Set(temp)]);
-    console.log(Id);
-  };
-  // ha();
 
   return (
     <>

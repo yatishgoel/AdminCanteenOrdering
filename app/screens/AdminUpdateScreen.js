@@ -74,16 +74,14 @@ function AdminUpdate({ navigation, route }) {
               category: item.category,
               price: item.price,
               description: item.description,
-              // hall: item.hall,
-              // image: [Image.resolveAssetSource(item.image).uri],
+              image: item.image,
             }}
             onSubmit={(values) => {
               handleUpdate(values);
             }}
             validationSchema={validationSchema}
           >
-            {/* <AppFormImagePicker name="image" /> */}
-            {/* <Picker items={Halls} name="hall" placeholder="Hall" /> */}
+            <AppFormImagePicker name="image" />
             <FormField
               defaultValue={item.title}
               maxLength={255}
@@ -112,7 +110,6 @@ function AdminUpdate({ navigation, route }) {
             />
             <SubmitButton title="update" />
           </Form>
-          <Button title="log" onPress={() => console.log("Debug12", item)} />
         </Screen>
       )}
     </>

@@ -4,7 +4,21 @@ const endpoint = "admin/menu";
 
 const getFoodItems = (hallNum = "") => client.get(endpoint + "/" + hallNum);
 const deleteListing = (id) => client.delete(endpoint + "/" + id);
-const updateListing = (id, item) => client.put(endpoint + "/" + id, item);
+// const updateListing = (id, item) => client.put(endpoint + "/" + id, item);
+const updateListing = (id, item) => {
+  var listingData = new FormData();
+  listingData.append("category", item.category);
+  listingData.append("description", item.description);
+  listingData.append("price", item.price);
+  listingData.append("title", item.title);
+  listingData.append("hall", item.hall);
+  listingData.append("image", {
+    name: item.name + "image",
+    type: "image/jpeg",
+    uri: item.image,
+  });
+  return client.put(endpoint + "/" + id, listingData);
+};
 const addFoodListing = (foodListing) => {
   //   "category": "Hh",
   //   "description": "Gsg",

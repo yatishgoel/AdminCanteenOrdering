@@ -15,35 +15,25 @@ import Entypo from "react-native-vector-icons/Entypo";
 import url from "../keys/url";
 import ActivityIndicator from "../components/ActivityIndicator";
 import Screen from "../components/Screen";
-
+import historyApi from "../api/history";
 function OrderScreen({ navigation }) {
-  const { user} = useContext(AuthContext);
-  const [history, SetHistory] = useState([]);
+  const { user } = useContext(AuthContext);
+  const [history, setHistory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     var interval;
     interval = setInterval(() => {
-      getData();
+      pendingOrders();
     }, 10000);
     return () => clearInterval(interval);
   }, [history]);
-  const getData = async () => {
-    const url2 = url.ngrokUrl + "/admin/pendingOrders/" + user._id;
 
-      // console.log("hbvbdgvbsd")
-    try {
-      setLoading(true);
-      let result = await fetch(url2, {
-        method: "GET", // Method itself
-      });
-      const data2 = await result.json();
-
-      SetHistory(data2);
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-    }
+  const pendingOrders = async () => {
+    setLoading(true);
+    const response = await historyApi.getPendingOrders(user._id);
+    setLoading(false);
+    if (response.ok) setHistory(response.data);
   };
 
   const renderItem = (item) => (
@@ -127,7 +117,7 @@ function OrderScreen({ navigation }) {
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => renderItem(item)}
           refreshing={refreshing}
-          onRefresh={() => getData()}
+          onRefresh={() => pendingOrders()}
         />
       )}
     </Screen>
