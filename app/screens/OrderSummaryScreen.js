@@ -59,7 +59,6 @@ export default function OrderSummaryScreen({ navigation, route }) {
     }
   };
   var radio_props = [
-    // { label: "Pending", value: 0 },
     { label: "Reject", value: 1 },
     { label: "Accept", value: 2 },
   ];
@@ -92,7 +91,7 @@ export default function OrderSummaryScreen({ navigation, route }) {
         radio_props={radio_props}
         formHorizontal={false}
         labelHorizontal={true}
-        initial={0}
+        initial={1}
         animation={false}
         onPress={(value) => {
           SetconfirmStatus(value);

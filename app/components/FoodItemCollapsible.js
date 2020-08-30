@@ -1,80 +1,94 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
-  Text,
+  TouchableOpacity,
+  Image as ImageReact,
   FlatList,
+  Alert,
   TouchableWithoutFeedback,
+  Text
 } from "react-native";
-import colors from "../config/colors";
-import AppText from "../components/AppText";
-import AuthContext from "../auth/context";
-import routes from "../navigation/routes";
+import { AntDesign } from "@expo/vector-icons";
+import Collapsible from "react-native-collapsible";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Entypo from "react-native-vector-icons/Entypo";
-import url from "../keys/url";
-import ActivityIndicator from "../components/ActivityIndicator";
-import Screen from "../components/Screen";
-
-function OrderScreen({ navigation }) {
-  const { user} = useContext(AuthContext);
-  const [history, SetHistory] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    var interval;
-    interval = setInterval(() => {
-      getData();
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [history]);
-  const getData = async () => {
-    const url2 = url.ngrokUrl + "/admin/pendingOrders/" + user._id;
-
-      // console.log("hbvbdgvbsd")
-    try {
-      setLoading(true);
-      let result = await fetch(url2, {
-        method: "GET", // Method itself
-      });
-      const data2 = await result.json();
-
-      SetHistory(data2);
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
+// import { useDispatch, useSelector } from "react-redux";
+// import { addToCart, addFromOtherHall } from "../store/actions/mealsaction";
+import AppText from "./AppText";
+import colors from "../config/colors";
+import { Image } from "react-native-expo-image-cache";
+function search(nameKey, myArray) {
+  var a = new Array();
+  for (var i = 0; i < myArray.length; i++) {
+    if (myArray[i].userEmail == nameKey) {
+      a.push(myArray[i]);
     }
+  }
+  console.log(a)
+  return a;
+}
+
+function FoodItemCollapsible({ foods, category }) {
+  // const cartItems = useSelector((state) => state.meals.cart);
+  const [collapsed, setCollapsed] = useState(true);
+  const [icon, setIcon] = useState("caretright");
+  const items = search(category, foods);
+  const handleCollapse = () => {
+    setCollapsed(!collapsed);
+    setIcon(collapsed ? "caretdown" : "caretright");
   };
 
+  // const dispatch = useDispatch();
+  // const addToCartHandler = (item) => {
+  //   if (cartItems.length == 0 || cartItems[0].hall == item.hall) {
+  //     dispatch(addToCart(item));
+  //   } else {
+  //     Alert.alert(
+  //       "Replace cart item?",
+  //       "Your cart contains items from other canteen. Do you want to discard the selection and add new item?",
+  //       [
+  //         {
+  //           text: "No",
+  //           onPress: () => {
+  //             console.log("No pressed");
+  //           },
+  //         },
+  //         {
+  //           text: "Yes",
+  //           onPress: () => {
+  //             dispatch(addFromOtherHall(item));
+  //           },
+  //         },
+  //       ]
+  //     );
+  //   }
+  // };
   const renderItem = (item) => (
     <TouchableWithoutFeedback
       onPress={() =>
-        navigation.navigate(routes.ORDERS_SUMMARY, {
-          data: item.items,
-          ID: item._id,
-        })
+        console.log("aa")
       }
     >
       <View style={styles.Maincontainer}>
         <Text style={{ color: "#aaa" }}>Items</Text>
 
         <AppText style={{ fontSize: 15, fontWeight: "800" }}>
-          {item.items[0].title}.... Click to view more items...
+          {item.items[0].id}.... Click to view more items...
         </AppText>
         <Text style={{ color: "#aaa" }}>ORDERED ON</Text>
-        <AppText style={{ fontSize: 15, fontWeight: "800" }}>
-          {/* {item.time.split("T")[0]} {item.time.split("T")[1]} */}
-          {new Date(item.time).toLocaleString()}
-        </AppText>
+        {/* <AppText style={{ fontSize: 15, fontWeight: "800" }}>
+          {item.time.split("T")[0]} {item.time.split("T")[1]}
+        </AppText> */}
         <Text style={{ color: "#aaa" }}>Total Amount</Text>
-        <AppText style={{ fontSize: 15, fontWeight: "bold", color: "green" }}>
+        {/* <AppText style={{ fontSize: 15, fontWeight: "bold", color: "green" }}>
           ₹{item.totalPrice}
-        </AppText>
+        </AppText> */}
         <Text style={{ color: "#aaa" }}>Payment Method</Text>
-        <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
+        {/* <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
           {item.payment_method}
-        </AppText>
-        {item.isDelivery ? (
+        </AppText> */}
+        {/* {!item.isDineIn ? (
           <>
             <Text style={{ color: "#aaa" }}>Room</Text>
             <AppText style={{ fontSize: 15, fontWeight: "bold" }}>
@@ -82,7 +96,7 @@ function OrderScreen({ navigation }) {
             </AppText>
           </>
         ) : (
-          <Text> Dine in</Text>
+          <Text> dine in</Text>
         )}
         {(() => {
           switch (item.orderStatus) {
@@ -113,24 +127,29 @@ function OrderScreen({ navigation }) {
             default:
               return null;
           }
-        })()}
+        })()} */}
       </View>
     </TouchableWithoutFeedback>
   );
   return (
-    <Screen>
-      <Text style={styles.title}>Hall {user.hall}</Text>
-      {loading && <ActivityIndicator visible={loading} />}
-      {!loading && (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handleCollapse}>
+        <View style={styles.header}>
+          <AntDesign name={icon} color={colors.primary} size={20} />
+          <AppText style={styles.category}>{category}</AppText>
+        </View>
+      </TouchableOpacity>
+      <Collapsible collapsed={collapsed}>
+        
         <FlatList
-          data={history}
+          data={items}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => renderItem(item)}
-          refreshing={refreshing}
-          onRefresh={() => getData()}
+          // refreshing={refreshing}
+          // onRefresh={() => getData()}
         />
-      )}
-    </Screen>
+      </Collapsible> 
+    </View>
   );
 }
 
@@ -194,4 +213,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderScreen;
+export default FoodItemCollapsible;
