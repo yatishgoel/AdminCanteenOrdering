@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -15,6 +15,7 @@ import colors from "../config/colors";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import ActivityIndicator from "../components/ActivityIndicator";
+import AuthContext from "../auth/context";
 import {
   Menu,
   MenuProvider,
@@ -40,6 +41,7 @@ function AdminEdit({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user, setUser } = useContext(AuthContext);
   const handleDelete = (item) => {
     Alert.alert(
       "Confirm Delete",
@@ -71,7 +73,7 @@ function AdminEdit({ navigation }) {
   const loadFood = async () => {
     try {
       setLoading(true);
-      const response = await listingApi.getFoodItems("2");
+      const response = await listingApi.getFoodItems(user.hall);
       const food = await response.data;
       console.log(food);
       setLoading(false);
