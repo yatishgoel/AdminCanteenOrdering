@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "CanteenOrdering",
-    "slug": "CanteenOrdering",
+    "name": "Canteen Admin",
+    "slug": "CanteenAdmin",
     "platforms": ["ios", "android"],
     "android": {
       "package": "com.tushar.AdminCOA",
@@ -23,6 +23,6 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": "A marketplace for selling the stuff you don't need anymore."
+    "description": "An app for canteen owners to manage orders from Canteen Ordering."
   }
 }

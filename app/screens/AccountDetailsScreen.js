@@ -30,7 +30,6 @@ const validationSchema = Yup.object().shape({
     .label("Mobile"),
   hall: Yup.number().required().label("Hall"),
   image: Yup.object().nullable().label("User Image"),
-  room: Yup.string().required().min(1).label("Room"),
   // image: Yup.object().nullable().label("Image"),
 });
 
@@ -49,17 +48,16 @@ function AccountDetails() {
           email: user.email,
           mobile: user.mobile,
           hall: user.hall,
-          room: user.room,
           image: user.imagePath,
         }}
         onSubmit={async (values) => {
-          const newUser = await authApi.updateUser(values);
-          setUser(newUser.data);
+          // const newUser = await authApi.updateUser(values);
+          // setUser(newUser.data);
+          alert("To be implemented");
         }}
         validationSchema={validationSchema}
       >
         <AppFormImagePicker name="image" />
-        {/* <Picker items={Halls} name="hall" placeholder="Hall" /> */}
         <FormField
           defaultValue={user.name}
           maxLength={255}
@@ -82,14 +80,6 @@ function AccountDetails() {
           name="hall"
           placeholder="Hall"
           icon="home"
-          editable={false}
-        />
-        <FormField
-          defaultValue={user.room}
-          maxLength={255}
-          name="room"
-          placeholder="Room"
-          icon="room-service"
           editable={false}
         />
         <View>

@@ -13,7 +13,6 @@ import axios from "axios";
 import colors from "../config/colors";
 import AuthContext from "../auth/context";
 
-
 import Spinner from "react-native-loading-spinner-overlay";
 
 import ngrokUrl from "../keys/url";
@@ -31,7 +30,7 @@ function OnlineCheckBook({ route, navigation }) {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
   const [showLoadingMore, setShowLoadingMore] = useState(false);
   const [data2, setData2] = useState([]);
   const [loadMoreData, setLoadMoreData] = useState(true);
@@ -46,7 +45,9 @@ function OnlineCheckBook({ route, navigation }) {
     console.log(ngrokUrl.ngrokUrl, user._id);
     var url =
       ngrokUrl.ngrokUrl +
-      "admin/fetch-paginated-data/"+user.hall+"?pageNo=" +
+      "admin/fetch-paginated-data/" +
+      user.hall +
+      "?pageNo=" +
       pageNo +
       "&pageSize=" +
       pageSize;
@@ -58,7 +59,7 @@ function OnlineCheckBook({ route, navigation }) {
           // console.log(response.data.list);
           //add data to list and change the state to render new content
           let receivedDataList = response.data.list;
-          console.log("nb hjhbhuu",response.data.list)
+          console.log("nb hjhbhuu", response.data.list);
           let currentDataList = data2;
           //append to existing list
           let newDataList = currentDataList.concat(receivedDataList);
@@ -100,29 +101,28 @@ function OnlineCheckBook({ route, navigation }) {
     if (data2.length > 0) {
       listSection = data2.map((record) => {
         return (
-         
-          <TouchableOpacity key={record.id} onPress = {() => navigation.navigate(routes.USER_ADMIN_HISTORY,record)}>
-
-          <View style={styles.detailsContainer} key={record.id}>
-      {(record.image && (
-        <Image source={{ uri: record.image }} style={styles.image} />
-        )) || (
-        <Image source={require("../assets/profile-pic-dummy.png")} style={styles.image} />
-      )}
-      <View style={{ flexDirection: "row-reverse", flex: 1 }}>
-        <AppText style={{ paddingRight: 15 }}>
-          {record.room}
-        </AppText>
-        <View style={styles.card}>
-          <AppText style={styles.title}>
-            {record.name}
-          </AppText>
-        
-        </View>
-        
-      </View>
-    </View>
-        
+          <TouchableOpacity
+            key={record.id}
+            onPress={() =>
+              navigation.navigate(routes.USER_ADMIN_HISTORY, record)
+            }
+          >
+            <View style={styles.detailsContainer} key={record.id}>
+              {(record.image && (
+                <Image source={{ uri: record.image }} style={styles.image} />
+              )) || (
+                <Image
+                  source={require("../assets/profile-pic-dummy.png")}
+                  style={styles.image}
+                />
+              )}
+              <View style={{ flexDirection: "row-reverse", flex: 1 }}>
+                <AppText style={{ paddingRight: 15 }}>{record.room}</AppText>
+                <View style={styles.card}>
+                  <AppText style={styles.title}>{record.name}</AppText>
+                </View>
+              </View>
+            </View>
           </TouchableOpacity>
         );
       });
@@ -180,15 +180,15 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
   },
-  room:{
-    paddingTop:10,
-    fontWeight: "bold"
+  room: {
+    paddingTop: 10,
+    fontWeight: "bold",
   },
   detailsContainer: {
     alignItems: "center",
     flexDirection: "row",
     marginVertical: 10,
-    padding:10
+    padding: 10,
   },
   header: {
     flexDirection: "row",

@@ -25,11 +25,8 @@ import Entypo from "react-native-vector-icons/Entypo";
 import Spinner from "react-native-loading-spinner-overlay";
 import routes from "../navigation/routes";
 
-
-
-
-export default function UserAdminHistory({navigation,route}) {
-    const bnda = route.params;
+export default function UserAdminHistory({ navigation, route }) {
+  const bnda = route.params;
   navigation.setOptions({
     title: bnda.name,
   });
@@ -37,11 +34,11 @@ export default function UserAdminHistory({navigation,route}) {
     fetchData();
   }, []);
   const { user, setUser } = useContext(AuthContext);
-  
+
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const [showLoadingMore, setShowLoadingMore] = useState(false);
   const [data2, setData2] = useState([]);
   const [loadMoreData, setLoadMoreData] = useState(true);
@@ -56,8 +53,11 @@ export default function UserAdminHistory({navigation,route}) {
     console.log(ngrokUrl.ngrokUrl, user._id);
     var url =
       ngrokUrl.ngrokUrl +
-      
-      "admin_user/fetch-paginated-data/"+bnda.id+"/"+user.hall+"?pageNo=" +
+      "admin_user/fetch-paginated-data/" +
+      bnda.id +
+      "/" +
+      user.hall +
+      "?pageNo=" +
       pageNo +
       "&pageSize=" +
       pageSize;
@@ -69,7 +69,7 @@ export default function UserAdminHistory({navigation,route}) {
           // console.log(response.data.list);
           //add data to list and change the state to render new content
           let receivedDataList = response.data.list;
-          console.log(response.data.list)
+          console.log(response.data.list);
           let currentDataList = data2;
           //append to existing list
           let newDataList = currentDataList.concat(receivedDataList);
@@ -113,9 +113,13 @@ export default function UserAdminHistory({navigation,route}) {
         return (
           <TouchableWithoutFeedback
             key={record._id}
-            onPress={() =>
-              navigation.navigate(routes.USER_ADMIN_HISTORY_DETAILS,record.items)
-            // console.log(record.items)
+            onPress={
+              () =>
+                navigation.navigate(
+                  routes.USER_ADMIN_HISTORY_DETAILS,
+                  record.items
+                )
+              // console.log(record.items)
             }
           >
             <View style={styles.Maincontainer}>
@@ -192,7 +196,6 @@ export default function UserAdminHistory({navigation,route}) {
               })()}
             </View>
           </TouchableWithoutFeedback>
-        
         );
       });
     } else {

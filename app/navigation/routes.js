@@ -4,9 +4,7 @@ export default Object.freeze({
   ADMIN_LISTING_ADD: "AdminAdder",
   ADMIN_LISTING_EDIT: "AdminEdit",
   ADMIN_LISTING_UPDATE: "AdminUpdate",
-
   MENU: "Menu",
-
   LISTING_EDIT: "ListingEdit",
   LOGIN: "Login",
   MESSAGES: "Messages",
@@ -16,7 +14,7 @@ export default Object.freeze({
   ONLINE_ACCOUNT: "Online_Account",
   ORDERS: "Orders",
   ORDERS_SUMMARY: "Summary",
-  ONLINE_CHECKBOOK: "Online_Checkbook",
-  USER_ADMIN_HISTORY : "User_Amdin_History",
-  USER_ADMIN_HISTORY_DETAILS : "User_Admin_History_Details"
+  ONLINE_CHECKBOOK: "Order History",
+  USER_ADMIN_HISTORY: "User_Amdin_History",
+  USER_ADMIN_HISTORY_DETAILS: "User_Admin_History_Details",
 });

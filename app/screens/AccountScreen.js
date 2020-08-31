@@ -10,7 +10,7 @@ import authStorage from "../auth/storage";
 
 const menuItems = [
   {
-    title: "Online Khata",
+    title: "History",
     icon: {
       name: "credit-card-multiple",
       backgroundColor: colors.cashGreen,
