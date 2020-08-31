@@ -57,7 +57,7 @@ export default function UserAdminHistory({navigation,route}) {
     var url =
       ngrokUrl.ngrokUrl +
       
-      "admin_user/fetch-paginated-data/"+bnda.id+"?pageNo=" +
+      "admin_user/fetch-paginated-data/"+bnda.id+"/"+user.hall+"?pageNo=" +
       pageNo +
       "&pageSize=" +
       pageSize;
@@ -119,7 +119,7 @@ export default function UserAdminHistory({navigation,route}) {
             }
           >
             <View style={styles.Maincontainer}>
-              <View style={styles.detailsContainer}>
+              {/* <View style={styles.detailsContainer}>
                 <Image
                   source={
                     listings.find((element) => element.id === record.hall).image
@@ -131,7 +131,7 @@ export default function UserAdminHistory({navigation,route}) {
                   <AppText style={styles.title}>Hall {record.hall}</AppText>
                 </View>
               </View>
-              <ListItemSeparator style={{ backgroundColor: colors.dark }} />
+              <ListItemSeparator style={{ backgroundColor: colors.dark }} /> */}
               <Text style={{ color: "#aaa" }}>Items</Text>
               <AppText style={{ fontSize: 15, fontWeight: "800" }}>
                 Click to view more items...
