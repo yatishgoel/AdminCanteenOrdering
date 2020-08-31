@@ -25,7 +25,7 @@ import {
 } from "react-native-popup-menu";
 import routes from "../navigation/routes";
 import listingApi from "../api/foodListings";
-import AuthContext from "../auth/context";
+
 
 function search(nameKey, myArray) {
   var a = new Array();
@@ -43,7 +43,7 @@ function AdminEdit({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { user, setUser } = useContext(AuthContext);
+
   const handleDelete = (item) => {
     Alert.alert(
       "Confirm Delete",

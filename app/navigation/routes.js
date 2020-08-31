@@ -17,4 +17,6 @@ export default Object.freeze({
   ORDERS: "Orders",
   ORDERS_SUMMARY: "Summary",
   ONLINE_CHECKBOOK: "Online_Checkbook",
+  USER_ADMIN_HISTORY : "User_Amdin_History",
+  USER_ADMIN_HISTORY_DETAILS : "User_Admin_History_Details"
 });
